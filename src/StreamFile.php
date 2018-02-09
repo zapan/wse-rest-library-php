@@ -170,7 +170,7 @@ class StreamFile extends Wowza
 
 
     public function getInstances(){
-        $this->restURI = $this->getHost() . "/servers/" . $this->getServerInstance() . "/vhosts/" . $this->getVHostInstance() . "/applications/" . $this->_applicationName . "/instances/";
+        $this->restURI = $this->getHost() . "/servers/" . $this->getServerInstance() . "/vhosts/" . $this->getVHostInstance() . "/applications/" . $this->_applicationName . "/instances";
         return $this->sendRequest($this->preparePropertiesForRequest(self::class), [], self::VERB_GET);
     }
 }
