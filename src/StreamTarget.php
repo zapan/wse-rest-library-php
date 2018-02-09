@@ -37,20 +37,24 @@ class StreamTarget extends Wowza
         $application = null
     )
     {
-        $this->restURI = $this->getRestURI() . "/" . $entryName;
-        $this->sourceStreamName = (!is_null($sourceStreamName)) ? $sourceStreamName : $this->sourceStreamName;
-        $this->entryName = (!is_null($entryName)) ? $entryName : $this->entryName;
-        $this->profile = (!is_null($profile)) ? $profile : $this->profile;
-        $this->host = (!is_null($host)) ? $host : $this->host;
-        $this->userName = (!is_null($userName)) ? $userName : $this->userName;
-        $this->password = (!is_null($password)) ? $password : $this->password;
-        $this->streamName = (!is_null($streamName)) ? $streamName : $this->streamName;
-        $this->application = (!is_null($application)) ? $application : $this->application;
-
-        $response = $this->sendRequest($this->preparePropertiesForRequest(self::class), []);
-
-        return $response;
+        return $this->sendStreamTarget($sourceStreamName, $entryName, $profile, $host, $userName, $password, $streamName, $application, self::VERB_POST);
     }
+
+
+    public function update(
+        $sourceStreamName = null,
+        $entryName = null,
+        $profile = null,
+        $host = null,
+        $userName = null,
+        $password = null,
+        $streamName = null,
+        $application = null
+    )
+    {
+        return $this->sendStreamTarget($sourceStreamName, $entryName, $profile, $host, $userName, $password, $streamName, $application, self::VERB_PUT);
+    }
+
 
     public function getAll()
     {
@@ -83,5 +87,33 @@ class StreamTarget extends Wowza
     protected function getRestURI()
     {
         return $this->getHost() . "/servers/" . $this->getServerInstance() . "/vhosts/" . $this->getVHostInstance() . "/applications/" . $this->appName . "/pushpublish/mapentries";
+    }
+
+    /**
+     * @param $sourceStreamName
+     * @param $entryName
+     * @param $profile
+     * @param $host
+     * @param $userName
+     * @param $password
+     * @param $streamName
+     * @param $application
+     * @return bool|mixed
+     */
+    protected function sendStreamTarget($sourceStreamName, $entryName, $profile, $host, $userName, $password, $streamName, $application, $verbType = self::VERB_POST)
+    {
+        $this->restURI = $this->getRestURI() . "/" . $entryName;
+        $this->sourceStreamName = (!is_null($sourceStreamName)) ? $sourceStreamName : $this->sourceStreamName;
+        $this->entryName = (!is_null($entryName)) ? $entryName : $this->entryName;
+        $this->profile = (!is_null($profile)) ? $profile : $this->profile;
+        $this->host = (!is_null($host)) ? $host : $this->host;
+        $this->userName = (!is_null($userName)) ? $userName : $this->userName;
+        $this->password = (!is_null($password)) ? $password : $this->password;
+        $this->streamName = (!is_null($streamName)) ? $streamName : $this->streamName;
+        $this->application = (!is_null($application)) ? $application : $this->application;
+
+        $response = $this->sendRequest($this->preparePropertiesForRequest(self::class), [], $verbType);
+
+        return $response;
     }
 }
