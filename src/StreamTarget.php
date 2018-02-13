@@ -55,6 +55,12 @@ class StreamTarget extends Wowza
         return $this->sendStreamTarget($sourceStreamName, $entryName, $profile, $host, $userName, $password, $streamName, $application, self::VERB_PUT);
     }
 
+    public function get($entryName)
+    {
+        $this->setNoParams();
+        $this->restURI = $this->getRestURI() . "/" . $entryName;
+        return $this->sendRequest($this->preparePropertiesForRequest(self::class), [], self::VERB_GET);
+    }
 
     public function getAll()
     {
@@ -80,7 +86,6 @@ class StreamTarget extends Wowza
     {
         $this->setNoParams();
         $this->restURI = $this->getRestURI() . "/" . $entryName;
-
         return $this->sendRequest($this->preparePropertiesForRequest(self::class), [], self::VERB_DELETE);
     }
 
